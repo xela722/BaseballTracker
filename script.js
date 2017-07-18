@@ -173,7 +173,9 @@ function findGames(mon, day, year) {
                             game[i].attributes["home_team_city"].value,
                             game[i].attributes["away_team_city"].value
                         )[0],
-                        game[i].attributes["game_data_directory"].value
+                        game[i].attributes["game_data_directory"].value,
+                        game[i].attributes['time_date'].value.substr(10, game[i].attributes['time_date'].value.length),
+                        game[i].attributes['ampm'].value
                     )
                 );
                 games[i].publish();
@@ -193,10 +195,12 @@ function gen(game) {
     loadXMLDoc(baseURL + game.attributes["dir"].value);
 }
 
-gameObject = function(awayTm, homeTm, gameDir) {
+gameObject = function(awayTm, homeTm, gameDir, startTime, amPm) {
     this.homeTm = homeTm;
     this.awayTm = awayTm;
     this.gameDir = gameDir;
+    this.startTime = startTime;
+    this.amPm = amPm;
     this.publish = function() {
         document.getElementById("games").innerHTML +=
             "<div class='game' onclick=gen(this) dir=" +
@@ -206,7 +210,7 @@ gameObject = function(awayTm, homeTm, gameDir) {
             this.awayTm +
             "</b><span> @ </span><b>" +
             this.homeTm +
-            "</b></div>";
+            "</b>"+ " - "+ this.startTime + " " + this.amPm +"</div>";
     };
 };
 
