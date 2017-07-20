@@ -1,6 +1,6 @@
 var txt = "";
 var baseURL = "http://gd2.mlb.com";
-
+var scores = [];
 var homeRos = [];
 var awayRos= [];
 
@@ -18,7 +18,8 @@ function loadXMLDoc(url) {
         console.log("error")
     }
 }
-function updateLineTxt(team, scores, r, h, e) {
+/* function updateLineTxt(team, scores, r, h, e) {
+    console.log(scores.length);
     txt +=
         "<tr><td>" +
         team +
@@ -46,6 +47,20 @@ function updateLineTxt(team, scores, r, h, e) {
         h +
         "</td><td>" +
         r +
+        "</td></tr>";
+} */
+
+function updateLineTxt(team, scores, r, h, e) {
+    console.log(scores.length);
+    txt += "<tr><td>" + team
+    for(var i = 0;i<scores.length;i++){
+        txt +="</td><td>"+scores[i];
+    }
+    txt += "</td><td>" + r +
+        "</td><td>" +
+        h +
+        "</td><td>" +
+        e +
         "</td></tr>";
 }
 
@@ -93,13 +108,31 @@ function teamParse(flag, xml) {
     
 }
 
+function createTables(type){
+    if(type=='roster'){
+
+    }
+    else if (type=='lineScore'){
+        //var tbl = "<table><thead><tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>R</td><td>H</td><td>E</td></tr></thead><tbody id='Line'></tbody></table>";
+        var tbl = "<table><thead><tr><td></td>"
+        console.log(scores.length);
+        for(var i=0; i<scores.length;i++){
+            var inn = i+1
+            console.log(inn);
+            tbl += "<td>"+inn+"</td>"
+        }
+        tbl += "<td>R</td><td>H</td><td>E</td></tr></thead><tbody id='Line'></tbody></table>"
+        document.getElementById("lineScore").innerHTML = tbl;
+    }
+}
+
 function fillTables(xml) {
-    document.getElementById("rosters").innerHTML ="<table class='awayRoster'><thead><tr><td>Jersey #</td><td>Name</td><td>Position</td></tr></thead><tbody id='away-Roster'></tbody></table><table class='homeRoster'><thead><tr><td>Jersey #</td><td>Name</td><td>Position</td></tr></thead><tbody id='home-Roster'></tbody></table>";
+    document.getElementById("rosters").innerHTML ="<table class='awayRoster'><thead><tr><td>MLB ID</td><td>Name</td><td>Position</td></tr></thead><tbody id='away-Roster'></tbody></table><table class='homeRoster'><thead><tr><td>Jersey #</td><td>Name</td><td>Position</td></tr></thead><tbody id='home-Roster'></tbody></table>";
     teamParse("away", xml);
     teamParse("home", xml);
-    document.getElementById("lineScore").innerHTML ="<table><thead><tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>R</td><td>H</td><td>E</td></tr></thead><tbody id='Line'></tbody></table>";
-    linescoreParse("away", xml);
-    linescoreParse("home", xml);
+    
+    linescoreParse("away", xml, true);
+    linescoreParse("home", xml, false);
     
 }
 
@@ -118,7 +151,7 @@ window.onload = function() {
     );
 };
 
-function linescoreParse(flag, xml) {
+function linescoreParse(flag, xml, create) {
     var x, i, xmlDoc;
     xmlDoc = xml.responseXML;
     txt = "";
@@ -136,6 +169,9 @@ function linescoreParse(flag, xml) {
                 continue;
             }
         }
+    }
+    if(create){
+        createTables('lineScore')
     }
     updateLineTxt(team, scores, tmpR, tmpH, tmpE);
     document.getElementById("Line").innerHTML += txt;
@@ -165,14 +201,8 @@ function findGames(mon, day, year) {
                 games.push(
                     new gameObject(
                         //game[i].attributes["game_data_directory"].value)[0]
-                        analyseDir(
-                            game[i].attributes["home_team_city"].value,
-                            game[i].attributes["away_team_city"].value
-                        )[1],
-                        analyseDir(
-                            game[i].attributes["home_team_city"].value,
-                            game[i].attributes["away_team_city"].value
-                        )[0],
+                        analyseDir(game[i].attributes["home_team_city"].value,game[i].attributes["away_team_city"].value)[1],
+                        analyseDir(game[i].attributes["home_team_city"].value,game[i].attributes["away_team_city"].value)[0],
                         game[i].attributes["game_data_directory"].value,
                         game[i].attributes['time_date'].value.substr(10, game[i].attributes['time_date'].value.length),
                         game[i].attributes['ampm'].value
