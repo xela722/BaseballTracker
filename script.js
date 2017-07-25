@@ -1,4 +1,4 @@
-var txt = "";
+  var txt = "";
 var baseURL = "http://gd2.mlb.com";
 var scores = [];
 var homeRos = [];
@@ -127,7 +127,7 @@ function createTables(type){
 }
 
 function fillTables(xml) {
-    document.getElementById("rosters").innerHTML ="<table class='awayRoster'><thead><tr><td>MLB ID</td><td>Name</td><td>Position</td></tr></thead><tbody id='away-Roster'></tbody></table><table class='homeRoster'><thead><tr><td>Jersey #</td><td>Name</td><td>Position</td></tr></thead><tbody id='home-Roster'></tbody></table>";
+    document.getElementById("rosters").innerHTML ="<table class='awayRoster'><thead><tr><td>MLB ID</td><td>Name</td><td>Position</td></tr></thead><tbody id='away-Roster'></tbody></table><table class='homeRoster'><thead><tr><td>MLB ID</td><td>Name</td><td>Position</td></tr></thead><tbody id='home-Roster'></tbody></table>";
     teamParse("away", xml);
     teamParse("home", xml);
     
@@ -222,6 +222,7 @@ function analyseDir(homeTm, awayTm) {
 }
 
 function gen(game) {
+    
     loadXMLDoc(baseURL + game.attributes["dir"].value);
 }
 
@@ -259,4 +260,4 @@ var playerObject = function(flag, id, name, pos){
     this.name=name;
     this.pos=pos;
     
-}
+}  
