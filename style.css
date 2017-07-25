@@ -32,7 +32,7 @@ table {
   margin-top:5px;
 }
 
-.game:focus{
+.game:hover{
   background-color: #8ec7ff;
 }
 
